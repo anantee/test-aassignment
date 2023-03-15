@@ -11,7 +11,7 @@
         <div>
           <TitleComponent title="Shifts" />
           <div class="float-right">
-            <v-btn variant="flat" color="secondary">
+            <v-btn variant="flat" color="secondary" @click="openAddBar">
               Add Shift
             </v-btn>
           </div>
@@ -20,7 +20,17 @@
     </div>
     <div>
       <div v-for="(shift, index) in shifts" :key="index">
-        <ShiftCard :shift="shift" />
+        <ShiftCard :shift="shift" @openEditBar="openEditBar" />
+      </div>
+    </div>
+    <div v-if="drawer">
+      <div>
+        <SideDrawer 
+          :drawer="drawer"
+          :selectedShift="selectedShift"
+          @saveShift="saveShift"
+          @cancel="cancel"
+          @deleteShift="deleteShift" />
       </div>
     </div>
   </div>
@@ -30,12 +40,14 @@
 import TitleComponent from '../components/TitleComponent.vue';
 import PriceFilterVue from '../components/PriceFilter.vue';
 import ShiftCard from '../components/ShiftCard.vue';
+import SideDrawer from '../components/SideDrawer.vue';
 export default {
   name: 'IndexPage',
   components: {
     TitleComponent,
     PriceFilterVue,
-    ShiftCard
+    ShiftCard,
+    SideDrawer
   },
   data() {
     return {
@@ -98,13 +110,39 @@ export default {
         }
       ],
       priceRange: [0, 70],
-      drawer: false
+      drawer: false,
+      selectedShift: {}
     }
   },
   methods: {
     changePriceRange(value) {
       this.priceRange = value;
-    }
+    },
+    openEditBar(shift) {
+      // here while edit load to data to side bar component
+      this.selectedShift = shift;
+      this.drawer = !this.drawer;
+    },
+    openAddBar() {
+      this.selectedShift = {};
+      this.drawer = !this.drawer;
+    },
+    cancel() {
+      this.drawer = false;
+    },
+    deleteShift(shift) {
+      let isAnyShift = this.shifts.find(s => s.id === shift.id);
+      const index = this.shifts.indexOf(isAnyShift);
+      this.shifts.splice(index, 1);
+      this.drawer = false;
+    },
+    saveShift(shift) {
+      let isAnyShift = this.shifts.find(s => s.id === shift.id);
+      if(!isAnyShift) {
+        this.shifts.push(shift);
+      }
+      this.drawer = false;
+    },
   }
 }
 </script>
