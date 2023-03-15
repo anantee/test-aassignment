@@ -1,83 +1,110 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card class="logo py-4 d-flex justify-center">
-        <NuxtLogo />
-        <VuetifyLogo />
-      </v-card>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
+  <div>
+    <div>
+      <TitleComponent title="Filter" />
+      <div>
+        <PriceFilterVue :priceRange="priceRange" @changePriceRange="changePriceRange" />
+      </div>
+    </div>
+    <div>
+      <div>
+        <div>
+          <TitleComponent title="Shifts" />
+          <div class="float-right">
+            <v-btn variant="flat" color="secondary">
+              Add Shift
+            </v-btn>
           </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div v-for="(shift, index) in shifts" :key="index">
+        <ShiftCard :shift="shift" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import TitleComponent from '../components/TitleComponent.vue';
+import PriceFilterVue from '../components/PriceFilter.vue';
+import ShiftCard from '../components/ShiftCard.vue';
 export default {
-  name: 'IndexPage'
+  name: 'IndexPage',
+  components: {
+    TitleComponent,
+    PriceFilterVue,
+    ShiftCard
+  },
+  data() {
+    return {
+      shifts: [
+        {
+          id: 1,
+          title: "Shift 1",
+          description: "This is shift is...",
+          dates: [
+            {
+              date: "2022-05-05",
+              startTime: "09:00",
+              endTime: "17:00",
+              type: "Consultation",
+              price: 70
+            },
+            {
+              date: "2022-05-06",
+              startTime: "08:00",
+              endTime: "20:00",
+              type: "Telephone",
+              price: 50
+            },
+            {
+              date: "2022-05-07",
+              startTime: "10:00",
+              endTime: "22:00",
+              type: "Ambulance",
+              price: 100
+            }
+          ]
+        },
+        {
+          id: 2,
+          title: "Shift 2",
+          description: "This is shift is...",
+          dates: [
+            {
+              date: "2022-07-07",
+              startTime: "09:00",
+              endTime: "16:00",
+              type: "Telephone",
+              price: 80
+            },
+            {
+              date: "2022-07-08",
+              startTime: "10:00",
+              endTime: "21:00",
+              type: "Ambulance",
+              price: 60
+            },
+            {
+              date: "2022-07-09",
+              startTime: "11:00",
+              endTime: "23:00",
+              type: "Consultation",
+              price: 95
+            }
+          ]
+        }
+      ],
+      priceRange: [0, 70],
+      drawer: false
+    }
+  },
+  methods: {
+    changePriceRange(value) {
+      this.priceRange = value;
+    }
+  }
 }
 </script>
